@@ -43,7 +43,7 @@ public class Bucket extends HasMetaData<Bucket> {
     }
 
     public Record getRecord(String recordName) {
-        checkArgument(!hasRecord(recordName), "No record with name '%s' exist in bucket '%s'!".formatted(recordName, name));
+        checkArgument(hasRecord(recordName), "No record with name '%s' exist in bucket '%s'!".formatted(recordName, name));
         return records.get(recordName);
     }
 
@@ -52,7 +52,7 @@ public class Bucket extends HasMetaData<Bucket> {
     }
 
     Record addRecord(Record record) {
-        checkArgument(hasRecord(record.getName()), "Record with name '%s' already exist in bucket '%s'!".formatted(record.getName(), name));
+        checkArgument(!hasRecord(record.getName()), "Record with name '%s' already exist in bucket '%s'!".formatted(record.getName(), name));
         records.put(record.getName(), record);
         return record;
     }

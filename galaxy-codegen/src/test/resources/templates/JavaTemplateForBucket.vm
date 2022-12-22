@@ -1,0 +1,7 @@
+public class ${bucket.name}{
+
+    #foreach($record in $bucket.getRecords())
+    private String ${record.name};
+    #end
+
+}

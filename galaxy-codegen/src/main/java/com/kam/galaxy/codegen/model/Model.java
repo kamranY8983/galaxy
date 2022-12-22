@@ -35,6 +35,14 @@ public class Model extends HasMetaData<Model> {
         model.getBuckets().forEach(bucket -> addBucket(new Bucket(bucket)).addMetadata(bucket.metadata));
     }
 
+    public static Model create(String name){
+        return new Model(name);
+    }
+
+    public Model copy(String newName){
+        return new Model(this, newName);
+    }
+
     public String getName() {
         return name;
     }
@@ -44,7 +52,7 @@ public class Model extends HasMetaData<Model> {
     }
 
     public Bucket getBucket(String bucketName) {
-        checkArgument(!hasBucket(bucketName), "No bucket with name '%s' exist in model '%s'!".formatted(bucketName, name));
+        checkArgument(hasBucket(bucketName), "No bucket with name '%s' exist in model '%s'!".formatted(bucketName, name));
         return buckets.get(bucketName);
     }
 
@@ -53,7 +61,7 @@ public class Model extends HasMetaData<Model> {
     }
 
     Bucket addBucket(Bucket bucket) {
-        checkArgument(hasBucket(bucket.getName()), "Bucket with name '%s' already exist in model '%s'!".formatted(bucket.getName(), name));
+        checkArgument(!hasBucket(bucket.getName()), "Bucket with name '%s' already exist in model '%s'!".formatted(bucket.getName(), name));
         buckets.put(bucket.getName(), bucket);
         return bucket;
     }

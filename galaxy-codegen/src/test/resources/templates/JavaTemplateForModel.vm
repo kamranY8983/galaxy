@@ -1,0 +1,5 @@
+public class ${model.name}{
+    private String ${variableName};
+
+    private void ${methodName}(){}
+}

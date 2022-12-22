@@ -1,0 +1,7 @@
+public class ${record.name}{
+
+    #foreach($element in $record.getElements())
+    private String ${element.name};
+    #end
+
+}

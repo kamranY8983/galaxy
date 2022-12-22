@@ -109,9 +109,6 @@ public enum OutputFormat implements OutputSerializer {
                         content,
                         null);
             }
-
-
-
         }
     };
 
