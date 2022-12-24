@@ -1,7 +1,5 @@
 package com.kam.galaxy.codegen.model;
 
-import com.google.common.base.Predicate;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

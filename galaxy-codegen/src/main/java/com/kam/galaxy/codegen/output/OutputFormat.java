@@ -5,6 +5,7 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.kam.galaxy.codegen.template.Template;
 import com.kam.galaxy.codegen.template.TemplateEngine;
+import com.kam.galaxy.codegen.utils.CodegenUtils;
 import com.kam.galaxy.common.exception.GalaxyException;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.parser.ParseException;
@@ -87,7 +88,7 @@ public enum OutputFormat implements OutputSerializer {
             } catch (IOException ex){
                 throw new GalaxyException("Failed to generate file: ", ex);
             } catch (ParseException ex){
-                //CodegenUtils
+                throw CodegenUtils.enhancedParseException(content, ex);
             }
 
             final var generatedClasses = codeParser.getClasses();

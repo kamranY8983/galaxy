@@ -31,17 +31,17 @@ public class GeneratorEngineTest {
     static Stream<Arguments> positiveArgumentsProvider() {
         return Stream.of(
                 Arguments.of((Object) new String[]{"--base-dir", "C:/"}),
-                Arguments.of((Object) new String[]{"--source-base-dir", "C:/source"}),
-                Arguments.of((Object) new String[]{"--test-base-dir", "C:/tests"}),
-                Arguments.of((Object) new String[]{"--base-dir", "C:/", "--source-base-dir", "C:/source", "--test-base-dir", "C:/tests"})
+                Arguments.of((Object) new String[]{"--sources-base-dir", "C:/source"}),
+                Arguments.of((Object) new String[]{"--tests-base-dir", "C:/tests"}),
+                Arguments.of((Object) new String[]{"--base-dir", "C:/", "--sources-base-dir", "C:/source", "--tests-base-dir", "C:/tests"})
         );
     }
 
     static Stream<Arguments> negativeArgumentsProvider() {
         return Stream.of(
                 Arguments.of((Object) new String[]{"--base-dir"}),
-                Arguments.of((Object) new String[]{"--source-base-dir"}),
-                Arguments.of((Object) new String[]{"--test-base-dir"})
+                Arguments.of((Object) new String[]{"--sources-base-dir"}),
+                Arguments.of((Object) new String[]{"--tests-base-dir"})
         );
     }
 
@@ -77,7 +77,7 @@ public class GeneratorEngineTest {
                                         .category(OutputCategory.SOURCES)
                                         .format(OutputFormat.JAVA)
                 )
-                .generate("--source-base-dir", path.toString());
+                .generate("--sources-base-dir", path.toString());
 
         Assertions.assertThat(statusCode).isEqualTo(0);
 
@@ -110,7 +110,7 @@ public class GeneratorEngineTest {
                                         .category(OutputCategory.SOURCES)
                                         .format(OutputFormat.JAVA)
                 )
-                .generate("--source-base-dir", path.toString());
+                .generate("--sources-base-dir", path.toString());
 
         Assertions.assertThat(statusCode).isEqualTo(0);
         Assertions.assertThat(new File(path.toString())).isDirectoryContaining("glob:**TestBucket1.java");
@@ -137,7 +137,7 @@ public class GeneratorEngineTest {
                                 jobConfig.template(Template.fromResources("templates/JavaTemplateForRecord.vm"))
                                         .model(() -> {
                                             Model model = Model.create("Test Model");
-                                            model.getOrAddBucket("TestBucket").getOrAddRecord("TestRecord1").addElement("record1Field1");
+                                            model.getOrAddBucket("TestBucket").getOrAddRecord("TestRecord1").addElement("record1 Field1");
                                             model.getOrAddBucket("TestBucket").getOrAddRecord("TestRecord1").addElement("record1Field2");
                                             model.getOrAddBucket("TestBucket").getOrAddRecord("TestRecord2").addElement("record2Field1");
                                             model.getOrAddBucket("TestBucket").getOrAddRecord("TestRecord2").addElement("record2Field2");
@@ -148,7 +148,7 @@ public class GeneratorEngineTest {
                                         .category(OutputCategory.SOURCES)
                                         .format(OutputFormat.JAVA)
                 )
-                .generate("--source-base-dir", path.toString());
+                .generate("--sources-base-dir", path.toString());
 
         Assertions.assertThat(statusCode).isEqualTo(0);
         Assertions.assertThat(new File(path.toString())).isDirectoryContaining("glob:**TestRecord1.java");

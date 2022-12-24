@@ -38,13 +38,13 @@ public abstract class GeneratorEngine implements Runnable{
         String baseDir;
 
         @Option(
-                names = {"--source-base-dir"},
+                names = {"--sources-base-dir"},
                 paramLabel = "SRC_BASE_DIR",
                 description = "Generated sources base directory path")
         String sourcesBaseDir;
 
         @Option(
-                names = {"--test-base-dir"},
+                names = {"--tests-base-dir"},
                 paramLabel = "TEST_BASE_DIR",
                 description = "Generated tests base directory path")
         String testsBaseDir;

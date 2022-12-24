@@ -1,12 +1,19 @@
 package com.kam.galaxy.codegen.template;
 
+import com.kam.galaxy.codegen.template.directive.CustomDirective;
 import com.kam.galaxy.common.exception.GalaxyException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.context.Context;
+import org.apache.velocity.runtime.RuntimeSingleton;
+import org.checkerframework.framework.qual.SubtypeOf;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanner;
+import org.reflections.scanners.Scanners;
 
 import java.io.StringWriter;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -20,7 +27,11 @@ public enum TemplateEngine {
         //initialize template engine
         Velocity.init();
 
-        //TODO: load custom directive implementation
+        new Reflections(CustomDirective.class.getPackageName())
+                .get(Scanners.SubTypes.of(CustomDirective.class).asClass()).stream()
+                .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
+                .map(Class::getName)
+                .forEach(RuntimeSingleton::loadDirective);
     }
 
     public String generate(Template template, Map<String, Object> context){
