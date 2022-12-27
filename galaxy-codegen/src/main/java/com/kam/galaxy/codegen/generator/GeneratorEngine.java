@@ -58,6 +58,13 @@ public abstract class GeneratorEngine implements Runnable{
     // we store job configurations is very lazt structure until job execution is started)
     private final Stream.Builder<Supplier<Stream<Consumer<GeneratorJobBuilder>>>> jobConfigs = Stream.builder();
 
+    private final Stream.Builder<Initializer> preRequisites = Stream.builder();
+
+    public GeneratorEngine addPreRequisite(Initializer preRequisite){
+        preRequisites.add(preRequisite);
+        return this;
+    }
+
     /**
      *  Adds generator jobs to the generation engine (supplied as Consumer)
      * @param jobs
@@ -72,7 +79,7 @@ public abstract class GeneratorEngine implements Runnable{
      * @param jobs
      * @return
      */
-    private GeneratorEngine addJobs(Stream<Consumer<GeneratorJobBuilder>> jobs) {
+    public GeneratorEngine addJobs(Stream<Consumer<GeneratorJobBuilder>> jobs) {
         return addJobs(() -> jobs);
     }
 
@@ -81,7 +88,7 @@ public abstract class GeneratorEngine implements Runnable{
      * @param jobs
      * @return
      */
-    private GeneratorEngine addJobs(Supplier<Stream<Consumer<GeneratorJobBuilder>>> jobs) {
+    public GeneratorEngine addJobs(Supplier<Stream<Consumer<GeneratorJobBuilder>>> jobs) {
         jobConfigs.add(jobs);
         return this;
     }
@@ -93,7 +100,7 @@ public abstract class GeneratorEngine implements Runnable{
                 new HashMap<>(
                         Map.of(
                             "generatedBy", this.getClass().getName(),
-                            "geneatedAt", DateTimeFormatter.ISO_DATE_TIME.format(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS)),
+                            "generatedAt", DateTimeFormatter.ISO_DATE_TIME.format(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS)),
                             "model", model)
                 );
 
@@ -126,6 +133,12 @@ public abstract class GeneratorEngine implements Runnable{
 
     @Override
     public void run() {
+        if(preRequisites != null){
+            log.info("Initializing");
+            preRequisites.build().forEach(Initializer::init);
+            log.info("Completed Initializing");
+        }
+
         if(jobConfigs != null){
             jobConfigs.build()
                     .flatMap(stream -> stream.get())

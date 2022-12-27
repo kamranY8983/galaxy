@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>galaxy</artifactId>
+        <groupId>com.kam</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>galaxy-trl</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <generated.source.directory>${project.build.directory}/generated-sources/trl</generated.source.directory>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.kam</groupId>
+            <artifactId>galaxy-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--   Maven exec plugin allows us to execute system and Java programs from the maven command.
+                    There are two goals of the maven exec plugin:
+                        exec:exec - can be used to execute any program in a separate process.
+                        exec:java - can be used to run a Java program in the same VM.         -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includeProjectDependencies>false</includeProjectDependencies>
+                    <includePluginDependencies>true</includePluginDependencies>
+                    <mainClass>com.kam.galaxy.codegen.trl.TRLGenerator</mainClass>
+                    <arguments>
+                        <argument>--sources-base-dir</argument>
+                        <argument>${generated.source.directory}</argument>
+                        <argument>--trl-version</argument>
+                        <argument>19.0</argument>
+                    </arguments>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>org.slf4j.simpleLogger.showDateTime</key>
+                            <value>true</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.kam</groupId>
+                        <artifactId>galaxy-trl-generator</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                        <version>${slf4j.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--  Add generated sources to maven sources bucket    -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generated.source.directory}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--  Reformat generated sources using spotless plugin and language specific formatter   -->
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.19</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <style>AOSP</style>
+                    <sourceDirectory>${generated.source.directory}</sourceDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

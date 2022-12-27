@@ -1,0 +1,22 @@
+package ${basePackage}.trl;
+
+import javax.annotation.processing.Generated;
+
+@Generated(value = "${generatedBy}", date = "${generatedAt}")
+public enum TRLVersion {
+
+    #foreach( ${version} in ${model.getMetadata("trlVersions")})
+    TRL_${version.replace('.','_')}("$version"),
+    #end
+    ;
+
+    private final String version;
+
+    private TRLVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion(){
+        return version;
+    }
+}

@@ -1,0 +1,9 @@
+package ${basePackage}.trl.v${model.getMetadata("trlVersion").replace('.','_')}.${record.getMetadata("sector").toLowerCase()}.${record.getMetadata("code").toLowerCase()};
+
+import javax.annotation.processing.Generated;
+
+@Generated(value = "${generatedBy}", date = "${generatedAt}")
+public class #asJavaIdentifier($record.getName()){
+
+
+}

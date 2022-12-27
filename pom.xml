@@ -11,6 +11,8 @@
     <modules>
         <module>galaxy-codegen</module>
         <module>galaxy-common</module>
+        <module>galaxy-trl-generator</module>
+        <module>galaxy-trl</module>
     </modules>
 
     <properties>

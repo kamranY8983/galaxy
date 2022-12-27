@@ -1,0 +1,27 @@
+package ${basePackage};
+
+import javax.annotation.processing.Generated;
+
+@Generated(value = "${generatedBy}", date = "${generatedAt}")
+public interface Sector {
+
+    #foreach( ${record} in ${model.getBucket("Products").getRecords()})
+    public enum ${record.name} {
+
+        #foreach(${element} in ${record.getElements()})
+        ${element.getName()}("$element.getMetadata("displayName")"),
+        #end
+        ;
+
+        private final String name;
+
+        private ${record.getName()}(String name) {
+            this.name = name;
+        }
+
+        public String getName(){
+            return name;
+        }
+    }
+    #end
+}

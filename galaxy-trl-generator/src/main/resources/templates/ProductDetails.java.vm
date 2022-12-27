@@ -1,0 +1,25 @@
+package ${basePackage}.trl.v${model.getMetadata("trlVersion").replace('.','_')}.${bucket.getMetadata("sector").toLowerCase()};
+
+import javax.annotation.processing.Generated;
+
+@Generated(value = "${generatedBy}", date = "${generatedAt}")
+public class #asJavaIdentifier($bucket.getName()){
+
+    #foreach( ${record} in ${bucket.getRecords()})
+    public enum #asJavaIdentifier(${record.name})Attribute {
+
+        #foreach(${element} in ${record.getElements()})
+            #set($attribute = $element.getMetadata("attribute"))
+            #if(!$attribute.notInUse())
+            #asAttributeHeader($element.getName())_$attribute.serialNumber(),
+            #end
+        #end;
+        }
+        #end
+
+        #foreach( ${record} in ${bucket.getRecords()})
+        private ${basePackage}.trl.v${model.getMetadata("trlVersion").replace('.','_')}.${bucket.getMetadata("sector").toLowerCase()}.${bucket.getMetadata("code").toLowerCase()}.#asJavaIdentifier(${record.name}) #decapitalize("#asJavaIdentifier(${record.name})");
+        #end
+
+
+}
