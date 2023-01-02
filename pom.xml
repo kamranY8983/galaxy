@@ -13,6 +13,7 @@
         <module>galaxy-common</module>
         <module>galaxy-trl-generator</module>
         <module>galaxy-trl</module>
+        <module>galaxy-ssh-sshj</module>
     </modules>
 
     <properties>
